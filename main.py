@@ -349,10 +349,14 @@ class Target(Agent):
 
 
 class BattleField(tk.Canvas):
+    '''
+    Класс занимается: количеством целей, снарядами, игровыми задачами,
+    умеет стартовать и паузить работы
+    '''
     def __init__(self, master):
         super().__init__(master, background='white')
 
-        self.num_targets = 2
+        self.num_targets = 500
 
         self.gun = Gun(self)
         self.targets = {}
@@ -536,14 +540,18 @@ class BattleField(tk.Canvas):
 
 
 class MainFrame(tk.Frame):
+    """
+    Этот класс занимается подсчетом очков при попадании снаряда по мишени
+    и Label
+    """
     def __init__(self, master):
         super().__init__(master)
 
         self.score = 0
-        self.score_tmpl = 'Score: {}'
+        self.score_timeplay = 'Score: {}'
         self.score_label = tk.Label(
             self,
-            text=self.score_tmpl.format(self.score),
+            text=self.score_timeplay.format(self.score),
             font=("Times New Roman", 36)
         )
         self.score_label.pack()
@@ -553,7 +561,7 @@ class MainFrame(tk.Frame):
 
     def new_game(self):
         self.score = 0
-        self.score_label['text'] = self.score_tmpl.format(self.score)
+        self.score_label['text'] = self.score_timeplay.format(self.score)
         self.battlefield.restart()
 
     def stop(self):
@@ -567,7 +575,7 @@ class MainFrame(tk.Frame):
 
     def report_hit(self, bullet, target):
         self.score += 1
-        self.score_label['text'] = self.score_tmpl.format(self.score)
+        self.score_label['text'] = self.score_timeplay.format(self.score)
 
     def get_state(self):
         state = {
@@ -578,7 +586,7 @@ class MainFrame(tk.Frame):
 
     def set_state(self, state, job_init):
         self.score = state['score']
-        self.score_label['text'] = self.score_tmpl.format(self.score)
+        self.score_label['text'] = self.score_timeplay.format(self.score)
         self.battlefield.set_state(state['battlefield'], job_init)
 
 
